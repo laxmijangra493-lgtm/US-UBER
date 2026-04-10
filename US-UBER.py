@@ -12,6 +12,7 @@ cursor.execute("""
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     email TEXT,
+    password TEXT, 
     phone TEXT
     )
 """)
@@ -26,8 +27,6 @@ cursor.execute("""
     )
 
 """)
-
-
 
 print("\n Swagatam! to US-UBER🙏")
 user = input("Who you are: Rider/Driver🤔 \n:")
@@ -62,16 +61,18 @@ elif user == "rider":
             print("\n✅ Welcome back,", user[1])  
         else:
             print("❌ User not found, please register")
+            sys.exit()
     else:
         print("🆕 New user, please register")
         name = input("\nYour name: ")
         email = input("\nYour email: ")
+        password = input("\nYour google password: ")
         phone = input("\nYour phone: ")
         if len(phone) != 10 or not phone.isdigit():
             print("❌ Invalid input")
             sys.exit()
 
-        cursor.execute("INSERT INTO ride (name, email, phone) VALUES (?, ?, ?)", (name, email, phone))
+        cursor.execute("INSERT INTO ride (name, email, phone , password) VALUES (?, ?, ?, ?)", (name, email, phone , password))
         conn.commit()
 
         print("✅ You loged in successfully!\n")
@@ -93,13 +94,14 @@ elif user == "rider":
         print(f"Car: {driver[3]}\n")
         print(f"Car number: {driver[4]}\n")
         print(f"Phone: {driver[2]}\n")
-            # Mark driver as busy
-        # cursor.execute("UPDATE ride SET status='busy' WHERE id=?", (ride[0],))
-        # conn.commit()
-        import random
 
+        cursor.execute("UPDATE driver SET status='busy' WHERE id=?", (driver[0],))
+        conn.commit()
+
+        import random
         arrival_time = random.randint(3, 10)
         print(f"🚗 Driver will arrive in {arrival_time} minutes\n")
+
 
     else:
         print("Driver was not available❌")
@@ -182,8 +184,7 @@ elif user == "rider":
         cursor.execute("DELETE FROM ride")
         sys.exit()
 
-    conn.close()
-# cursor.execute("DELETE FROM ride")    
+    conn.close()  
 
 
 
